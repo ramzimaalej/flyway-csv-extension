@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mytechden.utils;
+package com.mytechden.flyway_csv.utils;
 
-import com.mytechden.api.migration.CSVMigrationMetadata;
+import com.mytechden.flyway_csv.api.migration.CSVMigrationMetadata;
 import org.flywaydb.core.api.MigrationVersion;
-import org.flywaydb.core.api.resource.Resource;
+import org.flywaydb.core.internal.resource.Resource;
 import org.flywaydb.core.internal.util.Pair;
 
 public class MigrationInfoHelper {
-    public static CSVMigrationMetadata getCSVMigrationMetadata(Pair<MigrationVersion, String> migrationInfoPair, String separator, Resource res) {
+    public static CSVMigrationMetadata getCSVMigrationMetadata(Pair<MigrationVersion, String> migrationInfoPair, Resource res) {
         String rawDescription = migrationInfoPair.getRight();
-        String[] descriptionParts = rawDescription.split(separator);
+        // ResourceNameParser has a built-in function that replaces __ to whitespace
+        String[] descriptionParts = rawDescription.split("  ");
         MigrationVersion migrationVersion = migrationInfoPair.getLeft();
         if (descriptionParts.length > 1) {
             return new CSVMigrationMetadata(migrationVersion, descriptionParts[0], descriptionParts[1], res);

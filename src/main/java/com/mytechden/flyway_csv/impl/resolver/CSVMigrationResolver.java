@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mytechden.impl.resolver;
+package com.mytechden.flyway_csv.impl.resolver;
 
-import com.mytechden.api.migration.CSVMigrationMetadata;
-import com.mytechden.api.migration.CSVResolvedMigration;
-import com.mytechden.utils.MigrationInfoHelper;
+import com.mytechden.flyway_csv.api.migration.CSVMigrationMetadata;
+import com.mytechden.flyway_csv.api.migration.CSVResolvedMigration;
+import com.mytechden.flyway_csv.utils.MigrationInfoHelper;
 import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.api.resolver.Context;
 import org.flywaydb.core.api.resolver.MigrationResolver;
 import org.flywaydb.core.api.resolver.ResolvedMigration;
-import org.flywaydb.core.api.resource.LoadableResource;
 import org.flywaydb.core.internal.resolver.ResolvedMigrationComparator;
+import org.flywaydb.core.internal.resource.LoadableResource;
 import org.flywaydb.core.internal.resource.ResourceName;
 import org.flywaydb.core.internal.resource.ResourceNameParser;
 import org.flywaydb.core.internal.scanner.LocationScannerCache;
@@ -62,7 +62,7 @@ public class CSVMigrationResolver implements MigrationResolver {
             if (!result.isValid() || !prefix.equals(result.getPrefix())) {
                 continue;
             }
-            CSVMigrationMetadata csvMigrationMetadata = MigrationInfoHelper.getCSVMigrationMetadata(Pair.of(result.getVersion(), result.getDescription()), configuration.getSqlMigrationSeparator(), resource);
+            CSVMigrationMetadata csvMigrationMetadata = MigrationInfoHelper.getCSVMigrationMetadata(Pair.of(result.getVersion(), result.getDescription()), resource);
             migrations.add(new CSVResolvedMigration(csvMigrationMetadata));
         }
     }
@@ -73,11 +73,8 @@ public class CSVMigrationResolver implements MigrationResolver {
                 asList(cf.getLocations()),
                 cf.getClassLoader(),
                 cf.getEncoding(),
-                cf.isDetectEncoding(),
-                false,
                 resourceNameCache,
-                locationScannerCache,
-                cf.isFailOnMissingLocations());
+                locationScannerCache);
         return scn.getResources(cf.getSqlMigrationPrefix(), suffixes);
     }
 }

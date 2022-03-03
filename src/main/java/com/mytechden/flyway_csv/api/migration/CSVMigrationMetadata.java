@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mytechden.api.migration;
+package com.mytechden.flyway_csv.api.migration;
 
 import org.flywaydb.core.api.MigrationVersion;
-import org.flywaydb.core.api.resource.Resource;
+import org.flywaydb.core.internal.resource.Resource;
 
 public class CSVMigrationMetadata {
     private final MigrationVersion migrationVersion;

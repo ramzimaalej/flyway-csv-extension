@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mytechden.impl.executor;
+package com.mytechden.flyway_csv.impl.executor;
 
-import com.mytechden.api.migration.CSVMigration;
+import com.mytechden.flyway_csv.api.migration.CSVMigration;
 import org.flywaydb.core.api.FlywayException;
 import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.api.executor.Context;
 import org.flywaydb.core.api.executor.MigrationExecutor;
 import org.flywaydb.core.internal.database.DatabaseExecutionStrategy;
-import org.flywaydb.core.internal.database.DatabaseType;
-import org.flywaydb.core.internal.database.DatabaseTypeRegister;
+import org.flywaydb.core.internal.database.DatabaseFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -42,8 +41,7 @@ public class CSVMigrationExecutor implements MigrationExecutor {
 
     @Override
     public void execute(final Context context) throws SQLException {
-        DatabaseType databaseType = DatabaseTypeRegister.getDatabaseTypeForConnection(context.getConnection());
-        DatabaseExecutionStrategy strategy = databaseType.createExecutionStrategy(context.getConnection());
+        DatabaseExecutionStrategy strategy = DatabaseFactory.createExecutionStrategy(context.getConnection());
         strategy.execute(() -> {
             executeOnce(context);
             return true;
@@ -65,17 +63,12 @@ public class CSVMigrationExecutor implements MigrationExecutor {
         } catch (SQLException e) {
             throw e;
         } catch (Exception e) {
-            throw new FlywayException("Migration failed !", e);
+            throw new FlywayException("Migration failed!", e);
         }
     }
 
     @Override
     public boolean canExecuteInTransaction() {
         return csvMigration.canExecuteInTransaction();
-    }
-
-    @Override
-    public boolean shouldExecute() {
-        return true;
     }
 }
