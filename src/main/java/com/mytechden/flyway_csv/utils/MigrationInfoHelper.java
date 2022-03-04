@@ -27,7 +27,7 @@ public class MigrationInfoHelper {
         String[] descriptionParts = rawDescription.split("  ");
         MigrationVersion migrationVersion = migrationInfoPair.getLeft();
         if (descriptionParts.length > 1) {
-            return new CSVMigrationMetadata(migrationVersion, descriptionParts[0], descriptionParts[1], res);
+            return new CSVMigrationMetadata(migrationVersion, descriptionParts[0].replace(" ", "_"), descriptionParts[1], res);
         }
         return new CSVMigrationMetadata(migrationVersion, null, rawDescription, res);
     }
