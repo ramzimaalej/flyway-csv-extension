@@ -20,7 +20,14 @@ import org.flywaydb.core.api.MigrationVersion;
 import org.flywaydb.core.internal.resource.Resource;
 import org.flywaydb.core.internal.util.Pair;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.UUID;
+import java.util.regex.Pattern;
+
 public class MigrationInfoHelper {
+    private final static Pattern UUID_REGEX_PATTERN = Pattern.compile("^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$");
+
     public static CSVMigrationMetadata getCSVMigrationMetadata(Pair<MigrationVersion, String> migrationInfoPair, Resource res) {
         String rawDescription = migrationInfoPair.getRight();
         // ResourceNameParser has a built-in function that replaces __ to whitespace
@@ -31,4 +38,21 @@ public class MigrationInfoHelper {
         }
         return new CSVMigrationMetadata(migrationVersion, null, rawDescription, res);
     }
+
+    public static boolean isValidUUID(String str) {
+        if (null == str) {
+            return false;
+        }
+        return UUID_REGEX_PATTERN.matcher(str).matches();
+    }
+
+    public static byte[] uuidToBytes(UUID value) {
+        byte[] uuidBytes = new byte[16];
+        ByteBuffer.wrap(uuidBytes)
+                .order(ByteOrder.BIG_ENDIAN)
+                .putLong(value.getMostSignificantBits())
+                .putLong(value.getLeastSignificantBits());
+        return uuidBytes;
+    }
+
 }

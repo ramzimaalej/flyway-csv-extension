@@ -16,6 +16,7 @@
 package com.mytechden.flyway_csv.api.migration;
 
 import com.mytechden.flyway_csv.impl.executor.CSVMigrationExecutor;
+import com.mytechden.flyway_csv.utils.MigrationInfoHelper;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -179,8 +180,14 @@ public class CSVResolvedMigration implements CSVMigration {
             final PreparedStatement statement = connection.prepareStatement(insertSQL + valuesSQL, RETURN_GENERATED_KEYS);
             for (CSVRecord csvRecord : records) {
                 for (int index = 0; index < columns.size(); index++) {
-                    if (csvRecord.get(index) != null) {
-                        statement.setObject(index + 1, csvRecord.get(index), getColumnTypes.get(columns.get(index)));
+                    String columnValue = csvRecord.get(index);
+                    if (columnValue != null) {
+                        Integer columnType = getColumnTypes.get(columns.get(index));
+                        if (MigrationInfoHelper.isValidUUID(columnValue) && (Types.BINARY == columnType || Types.LONGVARBINARY == columnType || Types.VARBINARY == columnType)) {
+                            statement.setObject(index + 1, MigrationInfoHelper.uuidToBytes(UUID.fromString(columnValue)), columnType);
+                        } else {
+                            statement.setObject(index + 1, columnValue, columnType);
+                        }
                     } else {
                         statement.setNull(index + 1, Types.NULL);
                     }
