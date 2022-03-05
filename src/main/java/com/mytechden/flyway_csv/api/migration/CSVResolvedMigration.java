@@ -149,7 +149,7 @@ public class CSVResolvedMigration implements CSVMigration {
     private CSVParser getCSVParser() {
         try {
             LoadableResource loadableResource = (LoadableResource) this.csvMigrationMetadata.getResource();
-            return CSVFormat.RFC4180.builder().setHeader().setSkipHeaderRecord(true).setIgnoreEmptyLines(true).build().parse(loadableResource.read());
+            return CSVFormat.RFC4180.builder().setHeader().setNullString("null").setSkipHeaderRecord(true).setIgnoreEmptyLines(true).build().parse(loadableResource.read());
         } catch (FileNotFoundException e) {
             throw new FlywayException("File not found: " + this.csvMigrationMetadata.getResource().getRelativePath(), e);
         } catch (IOException e) {
