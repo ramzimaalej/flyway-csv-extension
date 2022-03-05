@@ -14,6 +14,9 @@ The naming convention follows the pattern defined below:
 
 Example: `V2__users__import_users`
 
+## Types mapping
+This extension uses Java built-in support to map field types to their corresponding column types. The library also supports null values. All you have to do is to use null instead of an empty string in your csv files.
+
 
 # License
 
