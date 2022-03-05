@@ -15,7 +15,13 @@ The naming convention follows the pattern defined below:
 Example: `V2__users__import_users`
 
 ## Types mapping
-This extension uses Java built-in support to map field types to their corresponding column types. The library also supports null values. All you have to do is to use null instead of an empty string in your csv files.
+This extension uses Java built-in support to map field types to their corresponding column types. 
+
+### UUID
+In order to import CSV files that include UUIDs, you need to make sure the database column is of type `BINARY(16)` or equivalent.
+
+### Null values
+All you have to do is to use null instead of an empty string in your csv files.
 
 
 # License
