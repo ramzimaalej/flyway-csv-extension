@@ -4,7 +4,7 @@ This is a Flyway extension to make it easier to import CSV files the same way as
 
 ## Installation
 
-Add `jitpack.io` as a project dependency.
+Add `jitpack.io` as a new repository.
 
  ```
 <repositories>
