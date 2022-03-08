@@ -7,22 +7,22 @@ This is a Flyway extension to make it easier to import CSV files the same way as
 Add `jitpack.io` as a project dependency.
 
  ```
- <repositories>
-		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository>
-	</repositories>
+<repositories>
+  <repository>
+  <id>jitpack.io</id>
+  <url>https://jitpack.io</url>
+  </repository>
+</repositories>
  ```
 
 Add dependency to your project.
 
 ```
 <dependency>
-	    <groupId>com.github.ramzimaalej</groupId>
-	    <artifactId>flyway-csv-extension</artifactId>
-	    <version>Tag</version>
-	</dependency>
+  <groupId>com.github.ramzimaalej</groupId>
+  <artifactId>flyway-csv-extension</artifactId>
+  <version>Tag</version>
+</dependency>
 ```
 
 ## Naming convention
