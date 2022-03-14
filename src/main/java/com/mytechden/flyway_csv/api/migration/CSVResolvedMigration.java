@@ -116,7 +116,6 @@ public class CSVResolvedMigration implements CSVMigration {
             logger.trace("CSV file: {}", this.csvMigrationMetadata.getResource().getFilename());
             logger.trace("CSV file headers: {}", String.join(", ", headers));
             logger.trace("CSV file total rows: {}", records.size());
-            logger.trace("CSV column types: {}", columnTypes);
             final Statement statement = this.getStatement(connection, headers, this.getTableName(), records, columnTypes);
             statement.executeBatch();
             logger.trace("Finished import CSV file");
@@ -136,10 +135,11 @@ public class CSVResolvedMigration implements CSVMigration {
     }
 
     private ResultSetMetaData getColumnsMetadata(Connection connection, String tableName) {
-        logger.trace("Going to get columns metadata");
+        String sql = "SELECT * FROM " + tableName + " WHERE 1 = 2";
+        logger.trace("Going to get columns metadata: {}", sql);
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM " + tableName + " WHERE 1 = 2");
+            ResultSet resultSet = statement.executeQuery(sql);
             logger.trace("Finished getting metadata");
             return resultSet.getMetaData();
         } catch (SQLException e) {
@@ -171,6 +171,7 @@ public class CSVResolvedMigration implements CSVMigration {
     }
 
     private Statement getStatement(Connection connection, List<String> columns, String tableName, List<CSVRecord> records, Map<String, Integer> getColumnTypes) {
+        logger.trace("Columns metadata: {}", getColumnTypes);
         final String insertSQL = columns.stream()
                 .map(String::trim)
                 .collect(joining(", ", "INSERT INTO " + tableName + "(", ")"));
@@ -184,12 +185,14 @@ public class CSVResolvedMigration implements CSVMigration {
                     String columnValue = csvRecord.get(index);
                     if (columnValue != null) {
                         Integer columnType = getColumnTypes.get(columns.get(index));
+                        logger.trace("Processing column: {}, value: {}, type: {}", columns.get(index), columnValue, columnType);
                         if (MigrationInfoHelper.isValidUUID(columnValue) && (Types.BINARY == columnType || Types.LONGVARBINARY == columnType || Types.VARBINARY == columnType)) {
                             statement.setObject(index + 1, MigrationInfoHelper.uuidToBytes(UUID.fromString(columnValue)), columnType);
                         } else {
                             statement.setObject(index + 1, columnValue, columnType);
                         }
                     } else {
+                        logger.trace("Processing column: {}, value: {}, type: {}", columns.get(index), null, Types.NULL);
                         statement.setNull(index + 1, Types.NULL);
                     }
                 }
