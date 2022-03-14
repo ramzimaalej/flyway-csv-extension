@@ -183,12 +183,14 @@ public class CSVResolvedMigration implements CSVMigration {
                     String columnValue = csvRecord.get(index);
                     if (columnValue != null) {
                         Integer columnType = getColumnTypes.get(columns.get(index));
+                        logger.trace("Processing column: {}, value: {}, type: {}", columns.get(index), columnValue, columnType);
                         if (MigrationInfoHelper.isValidUUID(columnValue) && (Types.BINARY == columnType || Types.LONGVARBINARY == columnType || Types.VARBINARY == columnType)) {
                             statement.setObject(index + 1, MigrationInfoHelper.uuidToBytes(UUID.fromString(columnValue)), columnType);
                         } else {
                             statement.setObject(index + 1, columnValue, columnType);
                         }
                     } else {
+                        logger.trace("Processing column: {}, value: {}, type: {}", columns.get(index), null, Types.NULL);
                         statement.setNull(index + 1, Types.NULL);
                     }
                 }
