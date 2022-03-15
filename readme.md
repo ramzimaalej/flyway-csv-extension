@@ -25,6 +25,21 @@ Add dependency to your project.
 </dependency>
 ```
 
+Resolver
+
+`com.mytechden.flyway_csv.impl.resolver.CSVMigrationResolver`
+
+Micronaut Configuration
+
+```
+flyway:
+  datasources:
+    default:
+      enabled: true
+      resolvers:
+        - com.mytechden.flyway_csv.impl.resolver.CSVMigrationResolver
+```
+
 ## Naming convention
 The naming convention follows the pattern defined below:
 
