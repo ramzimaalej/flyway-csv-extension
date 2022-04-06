@@ -23,7 +23,7 @@ import org.flywaydb.core.api.resolver.Context;
 import org.flywaydb.core.api.resolver.MigrationResolver;
 import org.flywaydb.core.api.resolver.ResolvedMigration;
 import org.flywaydb.core.internal.resolver.ResolvedMigrationComparator;
-import org.flywaydb.core.internal.resource.LoadableResource;
+import org.flywaydb.core.api.resource.LoadableResource;
 import org.flywaydb.core.internal.resource.ResourceName;
 import org.flywaydb.core.internal.resource.ResourceNameParser;
 import org.flywaydb.core.internal.scanner.LocationScannerCache;
@@ -37,7 +37,7 @@ import static java.util.Arrays.asList;
 
 public class CSVMigrationResolver implements MigrationResolver {
     static private final String[] SUFFIXES = { ".csv", ".CSV" };
-    protected final Map<String, List<String>> references = new HashMap<>();
+    protected final Map<String, List<String>> references = new HashMap<String, List<String>>();
     private final ResourceNameCache resourceNameCache;
     private final LocationScannerCache locationScannerCache;
 
@@ -48,7 +48,7 @@ public class CSVMigrationResolver implements MigrationResolver {
 
     public List<ResolvedMigration> resolveMigrations(Context context) {
         Configuration configuration = context.getConfiguration();
-        List<ResolvedMigration> migrations = new ArrayList<>();
+        List<ResolvedMigration> migrations = new ArrayList<ResolvedMigration>();
         addMigrations(migrations, configuration, configuration.getSqlMigrationPrefix());
         migrations.sort(new ResolvedMigrationComparator());
         return migrations;
@@ -68,13 +68,16 @@ public class CSVMigrationResolver implements MigrationResolver {
     }
 
     protected Collection<LoadableResource> getResources(Configuration cf, String... suffixes) {
-        final Scanner scn = new Scanner<>(
+        final Scanner scn = new Scanner(
                 Void.class,
                 asList(cf.getLocations()),
                 cf.getClassLoader(),
                 cf.getEncoding(),
+                true,
+                true,
                 resourceNameCache,
-                locationScannerCache);
+                locationScannerCache,
+                true);
         return scn.getResources(cf.getSqlMigrationPrefix(), suffixes);
     }
 }

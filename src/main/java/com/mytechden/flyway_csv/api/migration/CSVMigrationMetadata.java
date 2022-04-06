@@ -16,22 +16,24 @@
 package com.mytechden.flyway_csv.api.migration;
 
 import org.flywaydb.core.api.MigrationVersion;
-import org.flywaydb.core.internal.resource.Resource;
+import org.flywaydb.core.api.resource.LoadableResource;
 
 public class CSVMigrationMetadata {
     private final MigrationVersion migrationVersion;
     private final String tableName;
     private final String description;
-    private final Resource res;
+    private final LoadableResource res;
+    private final boolean shouldExecute;
 
     public CSVMigrationMetadata(MigrationVersion migrationVersion,
                                 String tableName,
                                 String description,
-                                Resource res) {
+                                LoadableResource res) {
         this.migrationVersion = migrationVersion;
         this.tableName = tableName;
         this.description = description;
         this.res = res;
+        this.shouldExecute = true;
     }
 
     public MigrationVersion getMigrationVersion() {
@@ -46,11 +48,15 @@ public class CSVMigrationMetadata {
         return description;
     }
 
-    public Resource getResource() {
+    public LoadableResource getResource() {
         return this.res;
     }
 
     public Integer getEquivalentChecksum() {
         return null;
+    }
+
+    public boolean shouldExecute() {
+        return shouldExecute;
     }
 }

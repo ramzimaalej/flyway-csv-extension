@@ -21,7 +21,8 @@ import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.api.executor.Context;
 import org.flywaydb.core.api.executor.MigrationExecutor;
 import org.flywaydb.core.internal.database.DatabaseExecutionStrategy;
-import org.flywaydb.core.internal.database.DatabaseFactory;
+import org.flywaydb.core.internal.database.DatabaseType;
+import org.flywaydb.core.internal.database.DatabaseTypeRegister;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -41,9 +42,10 @@ public class CSVMigrationExecutor implements MigrationExecutor {
 
     @Override
     public void execute(final Context context) throws SQLException {
-        DatabaseExecutionStrategy strategy = DatabaseFactory.createExecutionStrategy(context.getConnection());
+        DatabaseType databaseType = DatabaseTypeRegister.getDatabaseTypeForConnection(context.getConnection());
+        DatabaseExecutionStrategy strategy = databaseType.createExecutionStrategy(context.getConnection());
         strategy.execute(() -> {
-            executeOnce(context);
+            this.executeOnce(context);
             return true;
         });
     }
@@ -70,5 +72,10 @@ public class CSVMigrationExecutor implements MigrationExecutor {
     @Override
     public boolean canExecuteInTransaction() {
         return csvMigration.canExecuteInTransaction();
+    }
+
+    @Override
+    public boolean shouldExecute() {
+        return csvMigration.shouldExecute();
     }
 }

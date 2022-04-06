@@ -26,7 +26,7 @@ import org.flywaydb.core.api.MigrationVersion;
 import org.flywaydb.core.api.executor.MigrationExecutor;
 import org.flywaydb.core.api.migration.Context;
 import org.flywaydb.core.internal.resolver.ChecksumCalculator;
-import org.flywaydb.core.internal.resource.LoadableResource;
+import org.flywaydb.core.api.resource.LoadableResource;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class CSVResolvedMigration implements CSVMigration {
     public CSVResolvedMigration(CSVMigrationMetadata csvMigrationMetadata) {
         this.csvMigrationMetadata = csvMigrationMetadata;
         this.executor = new CSVMigrationExecutor(this);
-        this.checksum = ChecksumCalculator.calculate((LoadableResource) this.csvMigrationMetadata.getResource());
+        this.checksum = ChecksumCalculator.calculate(this.csvMigrationMetadata.getResource());
     }
 
     public MigrationVersion getVersion() {
@@ -102,6 +102,10 @@ public class CSVResolvedMigration implements CSVMigration {
 
     public boolean canExecuteInTransaction() {
         return true;
+    }
+
+    public boolean shouldExecute() {
+        return this.csvMigrationMetadata.shouldExecute();
     }
 
     @Override

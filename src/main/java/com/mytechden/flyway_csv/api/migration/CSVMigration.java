@@ -68,6 +68,8 @@ public interface CSVMigration extends ResolvedMigration {
      */
     boolean canExecuteInTransaction();
 
+    boolean shouldExecute();
+
     /**
      * Executes this migration. The execution will automatically take place within a transaction, when the underlying
      * database supports it and the canExecuteInTransaction returns {@code true}.

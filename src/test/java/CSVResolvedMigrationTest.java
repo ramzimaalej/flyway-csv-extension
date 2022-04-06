@@ -1,6 +1,7 @@
 import com.mytechden.flyway_csv.impl.resolver.CSVMigrationResolver;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
+import org.flywaydb.core.api.output.MigrateResult;
 import org.junit.Test;
 
 import javax.sql.DataSource;
@@ -24,9 +25,9 @@ public class CSVResolvedMigrationTest {
         final Connection db = ds.getConnection("sa", "sa");
         final Flyway fw = new Flyway(cf);
 
-        final int count = fw.migrate();
+        final MigrateResult migrateResult = fw.migrate();
 
-        assertThat(count, equalTo(2));
+        assertThat(migrateResult.migrationsExecuted, equalTo(2));
 
         final ResultSet countUsers = db.createStatement().executeQuery("SELECT count(id) FROM users");
         countUsers.next();

@@ -24,6 +24,7 @@ Add dependency to your project.
   <version>Tag</version>
 </dependency>
 ```
+Make sure to change `Tag` with the version number you want to use.
 
 Resolver
 

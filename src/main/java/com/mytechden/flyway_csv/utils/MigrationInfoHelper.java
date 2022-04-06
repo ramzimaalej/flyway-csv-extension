@@ -17,7 +17,7 @@ package com.mytechden.flyway_csv.utils;
 
 import com.mytechden.flyway_csv.api.migration.CSVMigrationMetadata;
 import org.flywaydb.core.api.MigrationVersion;
-import org.flywaydb.core.internal.resource.Resource;
+import org.flywaydb.core.api.resource.LoadableResource;
 import org.flywaydb.core.internal.util.Pair;
 
 import java.nio.ByteBuffer;
@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 public class MigrationInfoHelper {
     private final static Pattern UUID_REGEX_PATTERN = Pattern.compile("^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$");
 
-    public static CSVMigrationMetadata getCSVMigrationMetadata(Pair<MigrationVersion, String> migrationInfoPair, Resource res) {
+    public static CSVMigrationMetadata getCSVMigrationMetadata(Pair<MigrationVersion, String> migrationInfoPair, LoadableResource res) {
         String rawDescription = migrationInfoPair.getRight();
         // ResourceNameParser has a built-in function that replaces __ to whitespace
         String[] descriptionParts = rawDescription.split("  ");
